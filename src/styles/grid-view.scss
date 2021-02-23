@@ -12,10 +12,16 @@
 
 #title {
     grid-area: title;
+    font-size: 4em;
+    text-align: left;
 }
 
 #search {
     grid-area: search;
+    border: 0px;
+    font-size: 2em;
+    border: 2px solid grey;
+    border-radius: 5px;
 }
 
 #card-canvas {

@@ -15,10 +15,12 @@ class GridView extends Component {
         this.state = {
             page: 1,
             cards: [],
-            isLoading: true
+            isLoading: true,
+            searchTerm: ""
         }
 
         this.handleScrollEvent = this.handleScrollEvent.bind(this);
+        this.handleSearchInput = this.handleSearchInput.bind(this);
     }
 
     componentDidMount () {
@@ -31,16 +33,18 @@ class GridView extends Component {
     }
 
     componentDidUpdate (prevProps, prevState) {
-        if (prevState.page !== this.state.page) {
+        const { page, searchTerm } = this.state;
+
+        if (prevState.page !== page || prevState.searchTerm !== searchTerm) {
             this.getCards();
         }
     }
 
     getCards () {
         this.setState({isLoading: true});
-        const { page, cards } = this.state; 
+        const { page, cards, searchTerm } = this.state; 
 
-        const params = `?page=${page}&pageSize=${PAGE_SIZE}`;
+        const params = `?page=${page}&pageSize=${PAGE_SIZE}&name=${searchTerm}`;
         Axios.get(PATH + params).then((res) => {
             const fetchedCards = res.data.cards;
             this.setState({cards: cards.concat(fetchedCards)});
@@ -52,11 +56,26 @@ class GridView extends Component {
     }
 
     handleScrollEvent (e) {
+        if (!this.endOfCardsRef) {
+            return;
+        }
+
         const windowHeight = window.innerHeight;
         const refPosition = this.endOfCardsRef.current.getBoundingClientRect();
         if (refPosition.top < windowHeight) {
             this.setState({page: this.state.page + 1});
         }
+    }
+
+    handleSearchInput (e) {
+        const value = e.target.value;
+        
+        const newState = {
+            page: 0,
+            searchTerm: value,
+            cards: []
+        }
+        this.setState(newState);
     }
 
     buildCards () {
@@ -77,6 +96,10 @@ class GridView extends Component {
     render () {
         return (
             <div id="grid-view-wrapper">
+                <div id="title">Elderscrolling</div>
+                <input id="search"
+                    placeholder="Search for cards by name..." 
+                    onKeyUp={ this.handleSearchInput } />
                 { this.buildCards() }
             </div>
         )
