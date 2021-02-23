@@ -8,24 +8,46 @@
         "title search"
         "cardCanvas cardCanvas";
     column-gap: .4em;
-}
 
-#title {
-    grid-area: title;
-    font-size: 4em;
-    text-align: left;
-}
+    #title {
+        grid-area: title;
+        font-size: 4em;
+        text-align: left;
+    }
+    
+    #search {
+        grid-area: search;
+        border: 0px;
+        font-size: 2em;
+        border: 2px solid grey;
+        border-radius: 5px;
+    }
+    
+    #card-canvas {
+        grid-area: cardCanvas;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
 
-#search {
-    grid-area: search;
-    border: 0px;
-    font-size: 2em;
-    border: 2px solid grey;
-    border-radius: 5px;
-}
+        #end-of-cards-ref {
+            height: 1px;
+            width: 1px;
+        }
+    }
+    
+    #loading-message {
+        height: 100%;
+        width: 100%;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        display: flex;
+        align-items: center;
+        font-size: 4.5em;
+        background-color: rgba(247, 247, 247, 0.7);
 
-#card-canvas {
-    grid-area: cardCanvas;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+        span {
+            flex-basis: 100%;
+            text-align: center;
+        }
+    }
 }
