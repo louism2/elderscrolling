@@ -2,6 +2,8 @@ import { Component, createRef } from "react";
 import Axios from "axios";
 import Card from "./Card";
 
+import "../styles/grid-view.scss";
+
 const PAGE_SIZE = 20;
 const PATH = "https://api.elderscrollslegends.io/v1/cards";
 
@@ -63,13 +65,18 @@ class GridView extends Component {
         if (cards.length === 0 && isLoading === false) {
             return <p id="no-results-message">No Results</p>
         }
+
         const cardComponents = cards.map((card) => <Card { ...card } />);
-        return cardComponents.concat(<div key="end-of-cards-ref" ref={ this.endOfCardsRef }></div>);
+        return (
+            <div id="card-canvas">
+                { cardComponents.concat(<div key="end-of-cards-ref" ref={ this.endOfCardsRef }></div>) }
+            </div>
+        ) 
     }
 
     render () {
         return (
-            <div id="wrapper">
+            <div id="grid-view-wrapper">
                 { this.buildCards() }
             </div>
         )

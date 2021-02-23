@@ -1,4 +1,5 @@
 import "../styles/card.scss";
+
 const Card = ({ imageUrl, name, text, set, type }) => {
 
     return (

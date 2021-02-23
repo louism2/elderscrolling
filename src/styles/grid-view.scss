@@ -1,0 +1,25 @@
+#grid-view-wrapper {
+    display: grid;
+    height: 100vh;
+    font-size: 14px;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 14fr;
+    grid-template-areas: 
+        "title search"
+        "cardCanvas cardCanvas";
+    column-gap: .4em;
+}
+
+#title {
+    grid-area: title;
+}
+
+#search {
+    grid-area: search;
+}
+
+#card-canvas {
+    grid-area: cardCanvas;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
