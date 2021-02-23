@@ -1,5 +1,6 @@
 import { Component } from "react";
 import Axios from "axios";
+import Card from "./Card";
 
 const PAGE_SIZE = 20;
 const PATH = "https://api.elderscrollslegends.io/v1/cards";
@@ -32,7 +33,7 @@ class GridView extends Component {
     render () {
         return (
             <div id="wrapper">
-                { this.state.cards.map((card) => JSON.stringify(card))}
+                { this.state.cards.map((card) => <Card { ...card } />) }
             </div>
         )
     }
