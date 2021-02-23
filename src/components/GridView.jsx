@@ -20,8 +20,8 @@ class GridView extends Component {
     }
 
     componentDidMount () {
-        this.getCards();
         window.addEventListener("scroll", this.handleScrollEvent);
+        this.getCards();
     }
 
     componentWillUnmount () {
@@ -58,7 +58,11 @@ class GridView extends Component {
     }
 
     buildCards () {
-        const { cards } = this.state;
+        const { cards, isLoading } = this.state;
+
+        if (cards.length === 0 && isLoading === false) {
+            return <p id="no-results-message">No Results</p>
+        }
         const cardComponents = cards.map((card) => <Card { ...card } />);
         return cardComponents.concat(<div key="end-of-cards-ref" ref={ this.endOfCardsRef }></div>);
     }
