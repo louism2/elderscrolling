@@ -1,10 +1,11 @@
-import logo from './logo.svg';
+import GridView from "./components/GridView";
 
 function App() {
-  return (
-    <div className="App">
-    </div>
-  );
+    return (
+        <div className="App">
+            <GridView />
+        </div>
+    );
 }
 
 export default App;
