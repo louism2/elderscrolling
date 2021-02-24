@@ -96,7 +96,9 @@ class GridView extends Component {
         const { cards, isLoading } = this.state;
 
         if (cards.length === 0 && isLoading === false) {
-            return <p id="no-results-message">No Results</p>
+            return <div id="no-results-message">
+                       <span>No Results</span>
+                   </div>
         }
 
         const cardComponents = cards.map((card) => <Card { ...card } />);

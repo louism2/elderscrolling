@@ -33,6 +33,18 @@
             width: 1px;
         }
     }
+
+    #no-results-message {
+        display: flex;
+        align-items: center;
+        grid-column: 1/-1;
+        font-size: 4.5em;
+
+        span {
+            flex-basis: 100%;
+            text-align: center;
+        }
+    }
     
     #loading-message {
         height: 100%;
