@@ -12,14 +12,24 @@ class GridView extends Component {
     constructor (props) {
         super(props);
         this.endOfCardsRef = createRef();
+
         // Used as a synchronous means of identifying when the component
         // is fetching cards.  We use this to short-circuit incrementing
         // the 'page' state variable in the 'onScrollHandler' function.
         this.isFetchingCards = false;
         // Used to alleviate flickering of the 'loading' dialog.  We add
-        // a 700ms timeout after we get the API response so the loading
-        // dialog doesn't appear/disappear too fast.
+        // a 600ms timeout after we get the API response so the loading
+        // dialog doesn't appear/disappear too quickly.
         this.loadingTimeout = null;
+        // If the API returns fewer results than the 'PAGE_SIZE' then we
+        // know that we've reached the end of the cards for our given
+        // search criteria and we should stop sending requests to the API.
+        this.endOfSearchResults = false;
+        // Used to debounce requests to the API when searching by card name.
+        // Helps prevent flooding the API with requests and helps prevent 
+        // race conditions with multiple requests in-flight.
+        this.requestTimeout = null;
+
         this.state = {
             page: 1,
             cards: [],
@@ -55,24 +65,31 @@ class GridView extends Component {
         this.setState({isLoading: true});
 
         const params = `?page=${page}&pageSize=${PAGE_SIZE}&name=${searchTerm}`;
-        Axios.get(PATH + params).then((res) => {
+        Axios.get(PATH + params).then((res) => { 
             const fetchedCards = res.data.cards;
+            if (fetchedCards.length < PAGE_SIZE) {
+                this.endOfSearchResults = true;
+            }
             this.setState({cards: cards.concat(fetchedCards)});
         }).catch((err) => {
-            alert("An error occurred.  Please realod the page and try again");
+            alert("An error occurred.  Please reload the page and try again");
         }).finally(() => {
+            this.isFetchingCards = false;
             this.loadingTimeout = setTimeout(() => 
                 this.setState({isLoading: false})
-            , 700);
-            this.isFetchingCards = false;
+            , 600);
         });
     }
 
     handleScrollEvent (e) {
-        if (!this.endOfCardsRef?.current || this.isFetchingCards) {
+        if (!this.endOfCardsRef?.current || 
+            this.isFetchingCards ||
+            this.endOfSearchResults) {
             return;
         }
 
+        // As soon as the DOM ref is scrolled into view we want to fire
+        // an API request to get the next page of cards.
         const windowHeight = window.innerHeight;
         const refPosition = this.endOfCardsRef.current.getBoundingClientRect();
         if (refPosition.top < windowHeight) {
@@ -82,14 +99,20 @@ class GridView extends Component {
     }
 
     handleSearchInput (e) {
+        clearTimeout(this.requestTimeout);
+
+        this.endOfSearchResults = false;
         const value = e.target.value;
         
         const newState = {
-            page: 0,
+            page: 1,
             searchTerm: value,
             cards: []
         }
-        this.setState(newState);
+
+        this.requestTimeout = setTimeout(() => {
+            this.setState(newState);
+        }, 400)
     }
 
     buildCards () {
@@ -104,7 +127,7 @@ class GridView extends Component {
         const cardComponents = cards.map((card) => <Card { ...card } />);
         const endOfCardsRef = <div id="end-of-cards-ref" 
                                 key="end-of-cards-ref" 
-                                ref={ this.endOfCardsRef }>
+                                ref={ this.endOfCardsRef } >
                               </div>;
         return (
             <div id="card-canvas">

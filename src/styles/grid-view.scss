@@ -21,6 +21,7 @@
         font-size: 2em;
         border: 2px solid grey;
         border-radius: 5px;
+        background-color: rgb(240, 243, 247);
     }
     
     #card-canvas {
@@ -60,6 +61,46 @@
         span {
             flex-basis: 100%;
             text-align: center;
+        }
+    }
+}
+
+@media (max-width: 1024px) {
+    #grid-view-wrapper {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 14fr;
+        grid-template-areas: 
+            "title search"
+            "cardCanvas cardCanvas";
+    
+        #card-canvas {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+}
+
+@media (max-width: 730px) {
+    #grid-view-wrapper {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr 14fr;
+        grid-template-areas: 
+            "title"
+            "search"
+            "cardCanvas";
+        text-align: center;
+
+        #title {
+            text-align: center;
+        }
+    
+        #search {
+            text-align: center;
+            height: 2.2em;
+            font-size: 2em;
+        }
+
+        #card-canvas {
+            grid-template-columns: 1fr;
         }
     }
 }

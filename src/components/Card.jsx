@@ -2,6 +2,8 @@ import "../styles/card.scss";
 
 const Card = ({ imageUrl, name, text, set, type }) => {
 
+
+    // Pure component
     return (
         <div className="card-wrapper" key={ name }>
             <img src={ imageUrl } />
